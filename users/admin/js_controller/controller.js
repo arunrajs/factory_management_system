@@ -11,6 +11,7 @@ fetch_autoIncrmnt_value("materialpurchase",$('.PurchaseID_counter'));
 load_order_table();
 load_purchase_table();
 size_measurement_flag=0;
+var set_list_name=1;
 //$("#size_list_table").DataTable().ajax.reload(null, false); 
  //$("#status_section [value=" + 1 + "]").attr("checked", "checked");
 
@@ -895,6 +896,7 @@ function Employees_main_master_reg(types){
             $("#Order_customer_id_hidden").val(ui.item.CustID);
             $("#Order_customer").val(ui.item.value);
             $("#pre_order_btn").prop( "disabled", false );
+            $("#add_newItem_orde_btn").prop( "disabled", false );
 
         }
     }).focus(function(){    
@@ -1379,7 +1381,8 @@ function calculate_total_amount(){
 	}
 	var tax_amount=(totalAmount.toFixed(1)*parseInt(order_tax))/100;
 	var final_total=parseFloat(tax_amount+totalAmount);
-	$("#order_Total_Amount").val(final_total.toFixed(2))
+	$("#order_Total_Amount_hidden").val(final_total.toFixed(2));
+
 	
 }
 
@@ -1596,3 +1599,74 @@ function goBack() {
     }).focus(function(){    
        $(this).autocomplete('search', $(this).val())
      });
+
+    function add_new_order_to_table (){
+
+	var Order_Products_id_hidden=$("#Order_Products_id_hidden").val();
+	var Order_Type_id_hidden=$("#Order_Type_id_hidden").val();
+	var Order_Size_id_hidden=$("#Order_Size_id_hidden").val();
+
+	var Order_Products=$("#Order_Products").val();
+	var Order_Type=$("#Order_Type").val();
+	var Order_Size=$("#Order_Size").val();
+	var order_tax=$("#order_tax").val();
+
+	//var Order_unit=$("#Order_unit").children("option:selected").val();
+	//var order_Quantity=$("#order_Quantity").val();
+	
+	var Quentity_Type=$("#Quentity_Type").children("option:selected").val();
+	var order_number=$("#order_number").val();
+	var order_kg=$("#order_kg").val();
+
+	var order_per=$("#order_per").children("option:selected").val();
+	var order_per_rate=$("#order_per_rate").val();
+
+	var Order_Committed_Date=$("#Order_Committed_Date").val();
+	var Order_Description=$("#Order_Description").val();
+	
+	var order_Total_Amount_hidden=$("#order_Total_Amount_hidden").val();
+	var order_Advance_Amount=$("#order_Advance_Amount").val();
+	var order_Pending_Amount=$("#order_Pending_Amount").val();
+
+	if(order_tax==""||Order_Products==""||Order_Type==""||Order_Size==""||order_number==""||order_per==""||Order_Committed_Date==""||Order_Description==""||order_kg==""||order_per_rate==""){
+		fire_message('error','Please enter mandatory fields !','');
+	}else{
+		$("#set_order_tableBody").append("<tr role='row' class='odd' id='"+set_list_name+"'><td class='sorting_1'>"+set_list_name+"</td><td>"+Order_Products+"</td><td>"+Order_Type+"</td><td>"+order_kg+"</td><td>"+order_per_rate+"</td><td>"+order_tax+"</td><td>"+order_Total_Amount_hidden+"</td><td><a href='#' class='remove_txt' id='"+set_list_name+"' onClick='removeTableCell_order("+set_list_name+")'>Remove</a></td></tr>");
+		//list_arry.push(list_name,add_order_id,add_order_customer,add_order_Qty,add_order_Unit,tp_status_drop,add_order_remark)
+		set_list_name++;
+		//$("#add_order_modal").hide();
+		jQuery("#set_order_modal").modal('hide');
+		//alert(list_name);
+		//alert(list_arry);
+	}
+    }
+
+    function clear_set_modal(){
+    	$("#Order_Products").val("");
+    	$("#Order_Products_id_hidden").val("");
+    	$("#Order_Type").val("");
+    	$("#Order_Type_id_hidden").val("");
+    	$("#Order_Size").val("");
+    	$("#Order_Size_id_hidden").val("");
+    	$("#Order_Size_hidden_Height").val("");
+    	$("#Order_Size_hidden_Weight").val("");
+    	$("#Order_Size_hidden_Gage").val("");
+    	$("#Order_Size_hidden_unit").val("");
+    	$("#Quentity_Type").val("");
+    	$("#order_number").val("");
+    	$("#order_kg").val("");
+    	$("#order_tax").val("");
+    	$("#order_per_rate").val("");
+    	$("#order_per").val("");
+    	$("#Order_Committed_Date").val("");
+    	$("#Order_Description").val("");
+    	$("#status_section").empty();
+    	$("#order_Total_Amount_hidden").val("");
+    	loadStatus_on_modal('all')
+    }
+
+    function removeTableCell_order(id){
+    	alert(id);
+	$('table#set_order_tableBody tr#'+id).remove();
+	set_list_name--;
+}

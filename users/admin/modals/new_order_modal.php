@@ -12,7 +12,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <form role="form"  id="order_reg_forms"> 
+  <form role="form"  id="order_reg_forms"> 
             <div class="row">
             <div class="col-3">
              Order #<input class="form-control Order_id_class" id="Order_id" type="text" disabled="true" placeholder="00000">
@@ -40,89 +40,55 @@
          </div>
          <hr>
          <div class="row">
-            <div class="col-md-6"> Product
-              <input class="form-control mandat_fld" id="Order_Products" type="text"  name="Order_Product" placeholder="Product">
-              <input class="form-control" id="Order_Products_id_hidden" type="hidden">
-            </div>
-            <div class="col-md-6"> Type
-              <input class="form-control mandat_fld" id="Order_Type" type="text" placeholder="Type"></div>
-              <input class="form-control" id="Order_Type_id_hidden" type="hidden">
-         </div>
-        <div class="row"> 
+              <div class="col-md-1">
+                <button type="button" id="add_newItem_orde_btn" disabled="true" class="btn btn-block bg-gradient-success btn-sm" data-toggle="modal" onclick="clear_set_modal()" data-target="#set_order_modal">+ Add Item</button>
 
-          <div class="col-md-6">
-           Size<input class="form-control mandat_fld" id="Order_Size" type="text" placeholder="Size">
-           <input class="form-control" id="Order_Size_id_hidden" type="hidden">
-           <input class="form-control" id="Order_Size_hidden_Height" type="hidden">
-           <input class="form-control" id="Order_Size_hidden_Weight" type="hidden">
-           <input class="form-control" id="Order_Size_hidden_Gage" type="hidden">
-           <input class="form-control" id="Order_Size_hidden_unit" type="hidden">
+              </div>
+
          </div>
 
-        
-
-      
-             <div class="col-md-1">
-            <button type="button"  id="openSize_model_btn"  style=" margin-top: 34%;"  class="btn btn-block bg-gradient-success btn-sm" data-toggle="modal" data-target="#modal-lga">+ </button>
-         </div>
-             <!-- <div class="col-md-1">
-              Weight<input class="form-control mandat_fld" disabled="true" id="Order_weight_total" type="text" placeholder="Weight">
-           <input class="form-control" id="Order_Size_id_hidden" type="hidden">
-         </div> -->
+        <div class="set_order_table_div">
+            <table id="set_order_list_table" class="table table-striped table-bordered" style="width:100%">
+          <thead>
+            <tr>
+              <th>Ord#</th>
+              <th>Product</th>
+              <th>Type</th>
+              <th>Weight</th>
+              <th>Amount</th>
+              <th>Tax</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr> 
+          </thead>
+             <tbody id="set_order_tableBody">
           
-         </div>
-         <div class="row">
-
-          <div class="col-md-2"> Quentity Type <select disabled="true" class="form-control" id="Quentity_Type">
-                          <option value="0">Number</option>
-                          <option value="1">Weight</option>
-                        </select>
-                      </div>
-
-
-            <div class="col-md-1"> Number<input disabled="true" class="form-control mandat_fld" id="order_number" type="number" placeholder="Number"></div> 
-            <p style="margin-top: 2.2%;">OR</p>
-            <div class="col-md-1"> KG<input disabled="true" class="form-control mandat_fld" id="order_kg" type="number" placeholder="KG"></div> 
- <div class="col-md-1"> TAX % <input class="form-control mandat_fld" type="text" id="order_tax" placeholder="TAX %"></div> 
-            <!-- <div class="col-md-2"> Unit
-              <select class="form-control mandat_fld" id="Order_unit">
-                        
-                        </select></div> -->
-        <div class="col-md-1"> Rate<input class="form-control mandat_fld" type="text" id="order_per_rate" placeholder="Rate"></div> 
-        <div class="col-md-1"> Per<select class="form-control" id="order_per">
-                          <option value="kg">KG</option>
-                          <option value="no">Number</option>
-                        </select></div>
-        <div class="col-md-3">Committed Date<input class="form-control mandat_fld" id="Order_Committed_Date" type="datetime-local"></div> 
-         </div>
-        <div class="row">
           
-          <div class="col-md-6">
-             Order Description (Max 255 Characters)
-             <textarea class="form-control mandat_fld" rows="3" id="Order_Description" placeholder="Enter ..."></textarea>
+           </tbody>
+          </table>
 
           </div>
-          <div class="col-md-6">
-          Order Moving Status <span style="color: red;">*</span>
-          <p id='teststt'></p>
-           <div class="form-group">
-            <div class="row" id="status_section"> </div>
-                        
-                        
-           </div>
-         </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4"> Total Amount<input onkeyup="calculate_order_Pending_Amount();" id="order_Total_Amount" class="form-control mandat_fld" type="text" placeholder="Total Amount"></div>
+           
+        
+         
+        
+        
+            <div class="row">
+          <div class="col-md-4"> Total Amount
+
+            <input onkeyup="calculate_order_Pending_Amount();" id="order_Total_Amount" class="form-control mandat_fld" type="text" placeholder="Total Amount">
+
+            <input  id="order_Total_Amount_hidden" class="form-control mandat_fld" type="hidden" placeholder="Total Amount">
+
+          </div>
           <div class="col-md-4"> Advance Amount<input onkeyup="calculate_order_Pending_Amount();"  id="order_Advance_Amount" class="form-control mandat_fld" type="text" placeholder="Total Amount"></div>
           <div class="col-md-4"> Pending Amount<input id="order_Pending_Amount" disabled="true" class="form-control mandat_fld" type="text" placeholder="Total Amount"></div>
         </div>
-
- </form>
+            </form>
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" id="order_mdl_btn" onclick="create_new_order('create')" class="btn btn-primary">Save </button>
+              <button type="button" id="order_mdl_btn" onclick="create_new_order('create')" class="btn btn-primary">Add </button>
             </div>
           </div>
           <!-- /.modal-content -->
