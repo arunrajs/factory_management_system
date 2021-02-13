@@ -4,25 +4,13 @@ $function_name=trim($_POST['function_name']);
 $Order_id=trim($_POST['Order_id']);
 $Order_date=$_POST['Order_date'];
 $Order_customer=trim($_POST['Order_customer']);
-$Order_Products=trim($_POST['Order_Products']);
-$Order_Type=trim($_POST['Order_Type']);
-$Order_Size=trim($_POST['Order_Size']);
-$order_number=trim($_POST['order_number']);
-
-$order_per=trim($_POST['order_per']);
-$Order_Committed_Date=$_POST['Order_Committed_Date'];
-$Order_Description=trim($_POST['Order_Description']);
 $order_Total_Amount=trim($_POST['order_Total_Amount']);
 $order_Advance_Amount=trim($_POST['order_Advance_Amount']);
 $order_Pending_Amount=trim($_POST['order_Pending_Amount']);
-$order_tax=trim($_POST['order_tax']);
-//$list_values=trim($_POST['list_values']);
-
-$order_kg=trim($_POST['order_kg']);
-
-$order_per_rate=trim($_POST['order_per_rate']);
-$list_status=trim($_POST['list_status']);
-$status_list_array=explode(",",$list_status);
+$order_list_array=json_decode($_POST['order_list_array'], true);
+$count_order_arrya=count($order_list_array);
+//$list_status=trim($_POST['list_status']);
+//$status_list_array=explode(",",$order_list_array);
 
 if($function_name=="create_new_order"){
 
@@ -31,13 +19,34 @@ if($function_name=="create_new_order"){
 		if(mysqli_num_rows($results)==1){
 			echo "1"; //Exist 
 		}else{
-		mysqli_query($db,"INSERT INTO `orders` (`OrdID`, `Date`, `CustID`, `ProdID`, `TypeCode`, `SID`, `Number`, `Weight`, `TAX`, `PerRate`, `PerUnit`, `IncludeTax`, `Description`, `TotalAmount`, `AdvanceAmount`, `PendingAmount`, `CommittedDate`, `CurrOrderStatus`, `PaymentStatus`, `TotalMachineUsage`, `TotalProduct`, `TotalWastage`, `WastagePercentage`, `OrderClosed`) VALUES (NULL, '$Order_date', '$Order_customer', '$Order_Products', '$Order_Type', '$Order_Size', '$order_number', '$order_kg','$order_tax', '$order_per_rate', '$order_per', '1', '$Order_Description', '$order_Total_Amount', '$order_Advance_Amount', '$order_Pending_Amount', '$Order_Committed_Date', '1', '0', '0', '0', '0', '0', '1');");
-		$i=0;
-		for ($i=0; $i < count($status_list_array); $i++) { 
-     			$status_id=$status_list_array[$i];
-    			$query = mysqli_query($db,"INSERT INTO `order_status_grp`(`id`, `order_id`, `status_id`) VALUES (null,'$Order_id','$status_id')");
+		mysqli_query($db,"INSERT INTO `order_master`(`OrdID`, `Date`, `CustID`, `TotalAmount`, `AdvanceAmount`, `PendingAmount`, `Status`) VALUES (NULL,'$Order_date','$Order_customer','$order_Total_Amount','$order_Advance_Amount','$order_Pending_Amount',1)");
+
+
+		
+		for ($i=0; $i < $count_order_arrya; $i++) { 
+     		//	$status_id=$status_list_array[$i];
+    			/*$query = mysqli_query($db,"INSERT INTO `colours`(`CLCode`, `Colour`, `CLShort`, `Active`) VALUES (NULL,'$i','test2','1')");*/
+    				$ProdID=$order_list_array[$i]['Items'][0];
+    				$TypeCode=$order_list_array[$i]['Items'][1];
+    				$SID=$order_list_array[$i]['Items'][2];
+    				$Number=$order_list_array[$i]['Items'][3];
+    				$Weight=$order_list_array[$i]['Items'][4];
+    				$TAX=$order_list_array[$i]['Items'][5];
+    				$PerRate=$order_list_array[$i]['Items'][6];
+    				$PerUnit=$order_list_array[$i]['Items'][7];
+    				$Description=$order_list_array[$i]['Items'][8];
+    				$CommittedDate=$order_list_array[$i]['Items'][9];
+    				//$test_two=print_r( nl2br($order_list_array[$i]['Items'][1]."\n"));
+
+    				$query = mysqli_query($db,"INSERT INTO `orders`(`id`, `OrdID`, `Date`, `CustID`, `ProdID`, `TypeCode`, `SID`, `Number`, `Weight`, `TAX`, `PerRate`, `PerUnit`, `IncludeTax`, `Description`, `CommittedDate`, `CurrOrderStatus`, `PaymentStatus`, `TotalMachineUsage`, `TotalProduct`, `TotalWastage`, `WastagePercentage`, `OrderClosed`) VALUES (NULL,'$Order_id','$Order_date',$Order_customer,'$ProdID','$TypeCode','$SID','$Number','$Weight','$TAX','$PerRate','$PerUnit',1,'$Description','$CommittedDate',1,1,0,0,0,0,1)");
+    			
+    				echo "0";
+    				
  				}
-				echo "0"; //No
+				//echo gettype($order_list_array); //No
+				//echo count($order_list_array); //No
+				//print_r( $order_list_array[1]['Items'][9][0]); //No
+
 
 				 
 		}

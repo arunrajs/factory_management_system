@@ -5,13 +5,15 @@ fetch_district_drop(1);
 fetch_Order_Frequency_drop();
 fetch_Order_unit_drop();
 fetch_autoIncrmnt_value("customers",$('.client_nexID'));
-fetch_autoIncrmnt_value("orders",$('#Order_id'));
+fetch_autoIncrmnt_value("order_master",$('#Order_id'));
 fetch_autoIncrmnt_value("ord_machinejobs",$('#JobCard_id'));
 fetch_autoIncrmnt_value("materialpurchase",$('.PurchaseID_counter'));
 load_order_table();
 load_purchase_table();
 size_measurement_flag=0;
 var set_list_name=1;
+var order_list_array=[];
+var init_totalAmount=0;
 //$("#size_list_table").DataTable().ajax.reload(null, false); 
  //$("#status_section [value=" + 1 + "]").attr("checked", "checked");
 
@@ -1025,7 +1027,11 @@ function Employees_main_master_reg(types){
  function loadStatus_on_modal(data){
  	if(data=='all'){
  		reset_order_form()
- 		
+ 		$("#set_order_tableBody").empty();
+ 		set_list_name=1;
+ 		order_list_array=[];
+		init_totalAmount=0;
+		$("#add_newItem_orde_btn").prop( "disabled", true );
  	}
  	
  	$("#order_mdl_btn").html("Save");
@@ -1040,7 +1046,7 @@ function Employees_main_master_reg(types){
 			data: dataString,
 			success: function(result){
 				$("#status_section").html(result)
-				if(data!="all"){
+				if(data!="all"||data!="for_order"){
 					for (var i=0; i < data.length ;i++) {
 			 		$("#status_section").find('[value=' + data[i] + ']').prop("checked", true);
 					}
@@ -1098,7 +1104,7 @@ function Employees_main_master_reg(types){
 		cache: false,
 		data: dataString,
 		success: function(result){
-			console.log(result); 
+			//console.log(result); 
 			$("#purchase_tableBody").html(result);		
 		}
 	});
@@ -1109,7 +1115,7 @@ function calculate_order_Pending_Amount(){
 	var order_Total_Amount=$("#order_Total_Amount").val();
 	var order_Advance_Amount=$("#order_Advance_Amount").val();
 	var pending_amount=order_Total_Amount-order_Advance_Amount;
-	$("#order_Pending_Amount").val(pending_amount);
+	$("#order_Pending_Amount").val(pending_amount.toFixed(2));
 }
 
 function setInFront(element){
@@ -1388,17 +1394,17 @@ function calculate_total_amount(){
 
 function reset_order_form(){
 	$('#order_reg_forms').find(':input').val('');
-	
 	//fetch_autoIncrmnt_value("orders",$('#Order_id'));
 	 $('#Order_date').setNow();
 	  $('#Quentity_Type').val(0);
 	  $('#order_per').val('kg');
 	  $("#Quentity_Type").prop( "disabled", true );
 	$("#order_number").prop( "disabled", true );
+	
 	var today = new Date().toLocaleString('sv-SE').slice(0, 16).replace(' ', 'T');
 	var Order_date = $("#Order_date").val();
 	document.getElementById('Order_Committed_Date').setAttribute("min", Order_date);
-	fetch_autoIncrmnt_value("orders",$('.Order_id_class'));
+	fetch_autoIncrmnt_value("order_master",$('.Order_id_class'));
 }
 
 
@@ -1627,17 +1633,30 @@ function goBack() {
 	var order_Total_Amount_hidden=$("#order_Total_Amount_hidden").val();
 	var order_Advance_Amount=$("#order_Advance_Amount").val();
 	var order_Pending_Amount=$("#order_Pending_Amount").val();
+	var status_listArray = [];
+	var array_list =$('input[name="status_list"]:checked').each(function() {
+		status_listArray.push(this.value)
+	});
 
 	if(order_tax==""||Order_Products==""||Order_Type==""||Order_Size==""||order_number==""||order_per==""||Order_Committed_Date==""||Order_Description==""||order_kg==""||order_per_rate==""){
 		fire_message('error','Please enter mandatory fields !','');
 	}else{
 		$("#set_order_tableBody").append("<tr role='row' class='odd' id='"+set_list_name+"'><td class='sorting_1'>"+set_list_name+"</td><td>"+Order_Products+"</td><td>"+Order_Type+"</td><td>"+order_kg+"</td><td>"+order_per_rate+"</td><td>"+order_tax+"</td><td>"+order_Total_Amount_hidden+"</td><td><a href='#' class='remove_txt' id='"+set_list_name+"' onClick='removeTableCell_order("+set_list_name+")'>Remove</a></td></tr>");
-		//list_arry.push(list_name,add_order_id,add_order_customer,add_order_Qty,add_order_Unit,tp_status_drop,add_order_remark)
+		order_list_array.push({
+				Items:[Order_Products_id_hidden,Order_Type_id_hidden,Order_Size_id_hidden,order_number,order_kg,order_tax,order_per_rate,order_per,Order_Description,Order_Committed_Date]
+		});
+
+		//order_list_array.push("["+set_list_name,Order_Products_id_hidden,Order_Type_id_hidden,Order_Size_id_hidden,order_number,order_kg,order_tax,order_per_rate,Order_Committed_Date,Order_Description,status_listArray+"]");
+		
+		
 		set_list_name++;
 		//$("#add_order_modal").hide();
 		jQuery("#set_order_modal").modal('hide');
+		init_totalAmount+=parseFloat(order_Total_Amount_hidden);
+		$("#order_Total_Amount").val(init_totalAmount.toFixed(2))
 		//alert(list_name);
-		//alert(list_arry);
+	//	alert(order_list_array);
+		//alert(order_list_array.length);
 	}
     }
 
@@ -1662,7 +1681,9 @@ function goBack() {
     	$("#Order_Description").val("");
     	$("#status_section").empty();
     	$("#order_Total_Amount_hidden").val("");
-    	loadStatus_on_modal('all')
+    	loadStatus_on_modal('for_order')
+    	$('#Quentity_Type').val(0);
+	  	$('#order_per').val('kg');
     }
 
     function removeTableCell_order(id){

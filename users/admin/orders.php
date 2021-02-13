@@ -49,10 +49,9 @@
               <th>Ord#</th>
               <th>Date</th>
               <th>Customer</th>
-              <th>Product</th>
-              <th>Type</th>
-              <th>Weight</th>
-              <th>Amount</th>
+              <th>Total Amount</th>
+              <th>Advance Amount</th>
+              <th>Pending Amount</th>
               <th>Status</th>
               <th>Edit</th>
             </tr>
